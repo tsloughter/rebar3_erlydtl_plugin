@@ -2,8 +2,11 @@
  [{description, "A rebar plugin"}
  ,{vsn, "0.1.0"}
  ,{registered, []}
- ,{applications,
-    [kernel,stdlib]}
+ ,{applications, [kernel, stdlib, erlydtl]}
  ,{env,[]}
  ,{modules, []}
+
+ ,{contributors, ["Tristan Sloughter"]}
+ ,{licenses, ["MIT"]}
+ ,{links, [{"Github", "https://github.com/tsloughter/rebar3_erlydtl_plugin"}]}
  ]}.

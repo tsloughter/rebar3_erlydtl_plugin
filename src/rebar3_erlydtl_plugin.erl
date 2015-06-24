@@ -100,8 +100,6 @@
          do/1,
          format_error/1]).
 
--include_lib("providers/include/providers.hrl").
-
 -define(PROVIDER, compile).
 -define(DEPS, [{default, compile}]).
 
@@ -124,28 +122,15 @@ init(State) ->
 
 do(State) ->
     rebar_api:info("Running erlydtl...", []),
-    case rebar_state:get(State, escript_main_app, undefined) of
-        undefined ->
-            Dir = rebar_state:dir(State),
-            case rebar_app_discover:find_app(Dir, all) of
-                {true, AppInfo} ->
-                    AllApps = rebar_state:project_apps(State) ++ rebar_state:all_deps(State),
-                    case rebar_app_utils:find(rebar_app_info:name(AppInfo), AllApps) of
-                        {ok, AppInfo1} ->
-                            %% Use the existing app info instead of newly created one
-                            run_erlydtl(AppInfo1, State);
-                        _ ->
-                            run_erlydtl(AppInfo, State)
-                    end,
-                    {ok, State};
-                _ ->
-                    ?PRV_ERROR(no_main_app)
-            end;
-        Name ->
-            AllApps = rebar_state:project_apps(State) ++ rebar_state:all_deps(State),
-            {ok, App} = rebar_app_utils:find(Name, AllApps),
-            run_erlydtl(App, State),
-            {ok, State}
+    Dir = rebar_state:dir(State),
+    {true, AppInfo} = rebar_app_discover:find_app(Dir, all),
+    AllApps = rebar_state:project_apps(State) ++ rebar_state:all_deps(State),
+    case rebar_app_utils:find(rebar_app_info:name(AppInfo), AllApps) of
+        {ok, AppInfo1} ->
+            %% Use the existing app info instead of newly created one
+            run_erlydtl(AppInfo1, State);
+        _ ->
+            run_erlydtl(AppInfo, State)
     end.
 
 run_erlydtl(App, State) ->
@@ -168,8 +153,6 @@ run_erlydtl(App, State) ->
                              {recursive, option(recursive, DtlOpts2)}]).
 
 -spec format_error(any()) ->  iolist().
-format_error(no_main_app) ->
-    "Erlydtl Error: Multiple project apps found and no {app, atom()} option found in erlydtl_opts.";
 format_error(Reason) ->
     io_lib:format("~p", [Reason]).
 
