@@ -100,8 +100,8 @@
          do/1,
          format_error/1]).
 
--define(PROVIDER, compile).
--define(DEPS, [{default, compile}]).
+-define(PROVIDER, erlydtl).
+-define(DEPS, []).
 
 %% ===================================================================
 %% Public API
