@@ -169,7 +169,7 @@ default(doc_root) -> "priv/templates";
 default(source_ext) -> ".dtl";
 default(module_ext) -> "_dtl";
 default(custom_tags_dir) -> "";
-default(compiler_options) -> [return];
+default(compiler_options) -> [debug_info, return];
 default(recursive) -> true.
 
 compile_dtl(State, Source, Target, DtlOpts, Dir, OutDir) ->
