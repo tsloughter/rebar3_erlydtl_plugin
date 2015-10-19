@@ -1,12 +1,8 @@
-[{<<"merl">>,
-  {git,"git://github.com/erlydtl/merl.git",
-       {ref,"750b09d44425f435ff579a4d28bf5844bb5b4ef1"}},
-  1},
+[{<<"erlydtl">>,
+  {git,"https://github.com/erlydtl/erlydtl.git",
+       {ref,"d2d120c499b72dc51c6d81d7b0609102c0549928"}},
+  0},
  {<<"eunit_formatters">>,
   {git,"git://github.com/seancribbs/eunit_formatters",
-       {ref,"2c73eb6e46b0863f19507857b386a48a53aaf141"}},
-  1},
- {<<"erlydtl">>,
-  {git,"https://github.com/erlydtl/erlydtl.git",
-       {ref,"de00ccf522be8d3f9b0dcb7cd680f83b4fb7267a"}},
-  0}].
+       {ref,"35e3e6ab2db48af776a1a21bba6f1461c97caacb"}},
+  1}].
