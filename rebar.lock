@@ -1,8 +1,8 @@
 [{<<"erlydtl">>,
   {git,"https://github.com/erlydtl/erlydtl.git",
-       {ref,"5ac24d1e4083dfcb287ede74cc752ebdcda706a2"}},
+       {ref,"d2d120c499b72dc51c6d81d7b0609102c0549928"}},
   0},
  {<<"eunit_formatters">>,
   {git,"git://github.com/seancribbs/eunit_formatters",
-       {ref,"2c73eb6e46b0863f19507857b386a48a53aaf141"}},
+       {ref,"35e3e6ab2db48af776a1a21bba6f1461c97caacb"}},
   1}].
