@@ -150,7 +150,8 @@ run_erlydtl(App, State) ->
                                     compile_dtl(C, S, T, DtlOpts2, Dir, OutDir)
                             end,
                             [{check_last_mod, false},
-                             {recursive, option(recursive, DtlOpts2)}]).
+                             {recursive, option(recursive, DtlOpts2)}]),
+    {ok, State}.
 
 -spec format_error(any()) ->  iolist().
 format_error(Reason) ->
