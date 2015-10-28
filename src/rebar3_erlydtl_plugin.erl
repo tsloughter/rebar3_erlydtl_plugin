@@ -140,7 +140,7 @@ run_erlydtl(App, State) ->
     DtlOpts2 = [{doc_root, TemplateDir} | proplists:delete(doc_root, DtlOpts)],
     OutDir = rebar_app_info:ebin_dir(App),
     filelib:ensure_dir(filename:join(OutDir, "dummy.beam")),
-    rebar_base_compiler:run(State,
+    R = rebar_base_compiler:run(State,
                             [],
                             TemplateDir,
                             option(source_ext, DtlOpts2),
@@ -150,7 +150,8 @@ run_erlydtl(App, State) ->
                                     compile_dtl(C, S, T, DtlOpts2, Dir, OutDir)
                             end,
                             [{check_last_mod, false},
-                             {recursive, option(recursive, DtlOpts2)}]).
+                             {recursive, option(recursive, DtlOpts2)}]),
+    {R, State}.
 
 -spec format_error(any()) ->  iolist().
 format_error(Reason) ->
@@ -168,7 +169,7 @@ default(doc_root) -> "priv/templates";
 default(source_ext) -> ".dtl";
 default(module_ext) -> "_dtl";
 default(custom_tags_dir) -> "";
-default(compiler_options) -> [return];
+default(compiler_options) -> [debug_info, return];
 default(recursive) -> true.
 
 compile_dtl(State, Source, Target, DtlOpts, Dir, OutDir) ->
