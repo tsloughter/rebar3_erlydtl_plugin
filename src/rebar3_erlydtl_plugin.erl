@@ -131,7 +131,7 @@ do(State) ->
     [begin
          Opts = rebar_app_info:opts(AppInfo),
          Dir = rebar_app_info:dir(AppInfo),
-         OutDir = rebar_app_info:out_dir(AppInfo),
+         OutDir = rebar_app_info:ebin_dir(AppInfo),
 
          DtlOpts = proplists:unfold(rebar_opts:get(Opts, erlydtl_opts, [])),
          TemplateDir = filename:join(Dir, option(doc_root, DtlOpts)),
