@@ -122,36 +122,36 @@ init(State) ->
 
 do(State) ->
     rebar_api:info("Running erlydtl...", []),
-    Dir = rebar_state:dir(State),
-    {true, AppInfo} = rebar_app_discover:find_app(Dir, all),
-    AllApps = rebar_state:project_apps(State) ++ rebar_state:all_deps(State),
-    case rebar_app_utils:find(rebar_app_info:name(AppInfo), AllApps) of
-        {ok, AppInfo1} ->
-            %% Use the existing app info instead of newly created one
-            run_erlydtl(AppInfo1, State);
-        _ ->
-            run_erlydtl(AppInfo, State)
-    end.
+    Apps = case rebar_state:current_app(State) of
+               undefined ->
+                   rebar_state:project_apps(State);
+               AppInfo ->
+                   [AppInfo]
+           end,
+    [begin
+         Opts = rebar_app_info:opts(AppInfo),
+         Dir = rebar_app_info:dir(AppInfo),
+         OutDir = rebar_app_info:out_dir(AppInfo),
 
-run_erlydtl(App, State) ->
-    Dir = rebar_state:dir(State),
-    DtlOpts = proplists:unfold(rebar_state:get(State, erlydtl_opts, [])),
-    TemplateDir = filename:join(Dir, option(doc_root, DtlOpts)),
-    DtlOpts2 = [{doc_root, TemplateDir} | proplists:delete(doc_root, DtlOpts)],
-    OutDir = rebar_app_info:ebin_dir(App),
-    filelib:ensure_dir(filename:join(OutDir, "dummy.beam")),
-    R = rebar_base_compiler:run(State,
-                            [],
-                            TemplateDir,
-                            option(source_ext, DtlOpts2),
-                            OutDir,
-                            option(module_ext, DtlOpts2) ++ ".beam",
-                            fun(S, T, C) ->
-                                    compile_dtl(C, S, T, DtlOpts2, Dir, OutDir)
-                            end,
-                            [{check_last_mod, false},
-                             {recursive, option(recursive, DtlOpts2)}]),
-    {R, State}.
+         DtlOpts = proplists:unfold(rebar_opts:get(Opts, erlydtl_opts, [])),
+         TemplateDir = filename:join(Dir, option(doc_root, DtlOpts)),
+         DtlOpts2 = [{doc_root, TemplateDir} | proplists:delete(doc_root, DtlOpts)],
+         filelib:ensure_dir(filename:join(OutDir, "dummy.beam")),
+
+         rebar_base_compiler:run(Opts,
+                                 [],
+                                 TemplateDir,
+                                 option(source_ext, DtlOpts2),
+                                 OutDir,
+                                 option(module_ext, DtlOpts2) ++ ".beam",
+                                 fun(S, T, C) ->
+                                         compile_dtl(C, S, T, DtlOpts2, Dir, OutDir)
+                                 end,
+                                 [{check_last_mod, false},
+                                  {recursive, option(recursive, DtlOpts2)}])
+     end || AppInfo <- Apps],
+
+    {ok, State}.
 
 -spec format_error(any()) ->  iolist().
 format_error(Reason) ->
@@ -172,15 +172,15 @@ default(custom_tags_dir) -> "";
 default(compiler_options) -> [debug_info, return];
 default(recursive) -> true.
 
-compile_dtl(State, Source, Target, DtlOpts, Dir, OutDir) ->
+compile_dtl(_, Source, Target, DtlOpts, Dir, OutDir) ->
     case needs_compile(Source, Target, DtlOpts) of
         true ->
-            do_compile(State, Source, Target, DtlOpts, Dir, OutDir);
+            do_compile(Source, Target, DtlOpts, Dir, OutDir);
         false ->
             skipped
     end.
 
-do_compile(State, Source, Target, DtlOpts, Dir, OutDir) ->
+do_compile(Source, Target, DtlOpts, Dir, OutDir) ->
     CompilerOptions = option(compiler_options, DtlOpts),
 
     Sorted = proplists:unfold(
@@ -201,11 +201,11 @@ do_compile(State, Source, Target, DtlOpts, Dir, OutDir) ->
         {ok, _Mod} ->
             ok;
         {ok, _Mod, Ws} ->
-            rebar_base_compiler:ok_tuple(State, Source, Ws);
+            rebar_base_compiler:ok_tuple(Source, Ws);
         error ->
-            rebar_base_compiler:error_tuple(State, Source, [], [], Opts);
+            rebar_base_compiler:error_tuple(Source, [], [], Opts);
         {error, Es, Ws} ->
-            rebar_base_compiler:error_tuple(State, Source, Es, Ws, Opts)
+            rebar_base_compiler:error_tuple(Source, Es, Ws, Opts)
     end.
 
 module_name(Target) ->
