@@ -11,9 +11,9 @@ application:load(syntax_tools),
 NewCfg = case application:get_key(syntax_tools, vsn) of
     {ok, Vsn} when "1.7" > Vsn ->
         Deps = [{merl, ".*", {git, "https://github.com/Licenser/merl.git", {branch, "master"}}},
-                {deps, [{erlydtl, "",
+                {erlydtl, "",
                          {git, "https://github.com/erlydtl/erlydtl.git",
-                          {branch, "master"}}}]}],
+                          {branch, "master"}}}],
 
         Overrides =
           [{override, erlydtl,
