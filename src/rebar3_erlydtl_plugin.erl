@@ -136,19 +136,21 @@ do(State) ->
          DtlOpts = proplists:unfold(rebar_opts:get(Opts, erlydtl_opts, [])),
          TemplateDir = filename:join(Dir, option(doc_root, DtlOpts)),
          DtlOpts2 = [{doc_root, TemplateDir} | proplists:delete(doc_root, DtlOpts)],
+         TagDir = filename:join(Dir, option(custom_tags_dir, DtlOpts2)),
+         DtlOpts3 = [{custom_tags_dir, TagDir} | proplists:delete(custom_tags_dir, DtlOpts2)],
          filelib:ensure_dir(filename:join(OutDir, "dummy.beam")),
 
          rebar_base_compiler:run(Opts,
                                  [],
                                  TemplateDir,
-                                 option(source_ext, DtlOpts2),
+                                 option(source_ext, DtlOpts3),
                                  OutDir,
-                                 option(module_ext, DtlOpts2) ++ ".beam",
+                                 option(module_ext, DtlOpts3) ++ ".beam",
                                  fun(S, T, C) ->
-                                         compile_dtl(C, S, T, DtlOpts2, Dir, OutDir)
+                                         compile_dtl(C, S, T, DtlOpts3, Dir, OutDir)
                                  end,
                                  [{check_last_mod, false},
-                                  {recursive, option(recursive, DtlOpts2)}])
+                                  {recursive, option(recursive, DtlOpts3)}])
      end || AppInfo <- Apps],
 
     {ok, State}.
