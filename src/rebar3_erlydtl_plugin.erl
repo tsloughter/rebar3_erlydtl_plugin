@@ -27,7 +27,7 @@
 %% -------------------------------------------------------------------
 
 %% The rebar_erlydtl_compiler module is a plugin for rebar that compiles
-%% ErlyDTL templates.  By default, it compiles all templates/*.dtl
+%% ErlyDTL templates.  By default, it compiles all priv/templates/*.dtl
 %% to ebin/*_dtl.beam.
 %%
 %% Configuration options should be placed in rebar.config under
@@ -38,7 +38,7 @@
 %% Available options include:
 %%
 %%  doc_root: where to find templates to compile
-%%            "templates" by default
+%%            "priv/templates" by default
 %%
 %%  out_dir: where to put compiled template beam files
 %%           "ebin" by default
@@ -72,7 +72,7 @@
 %%
 %% The default settings are the equivalent of:
 %%   {erlydtl_opts, [
-%%               {doc_root,   "templates"},
+%%               {doc_root,   "priv/templates"},
 %%               {out_dir,    "ebin"},
 %%               {source_ext, ".dtl"},
 %%               {module_ext, "_dtl"}
@@ -80,7 +80,7 @@
 %%
 %% The following example will compile the following templates:
 %% "src/*.dtl" files into "ebin/*_dtl.beam" and
-%% "templates/*.html" into "ebin/*.beam". Note that any tuple option
+%% "priv/templates/*.html" into "ebin/*.beam". Note that any tuple option
 %% (such as 'out_dir') in the outer list is added to each inner list:
 %%   {erlydtl_opts, [
 %%      {out_dir, "ebin"},
@@ -89,7 +89,7 @@
 %%          {doc_root, "src"}, {module_ext, "_dtl"}
 %%      ],
 %%      [
-%%          {doc_root, "templates"}, {module_ext, ""}, {source_ext, ".html"}
+%%          {doc_root, "priv/templates"}, {module_ext, ""}, {source_ext, ".html"}
 %%      ]
 %%   ]}.
 -module(rebar3_erlydtl_plugin).
