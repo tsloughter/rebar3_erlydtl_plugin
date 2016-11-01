@@ -100,7 +100,7 @@
          do/1,
          format_error/1]).
 
--define(PROVIDER, compile).
+-define(PROVIDER, erlydtl).
 -define(DEPS, [{default, compile}]).
 
 %% ===================================================================
@@ -111,8 +111,8 @@
 init(State) ->
     State1 = rebar_state:add_provider(State, providers:create([{name, ?PROVIDER},
                                                                {module, ?MODULE},
-                                                               {namespace, erlydtl},
-                                                               {bare, false},
+                                                               %% {namespace, erlydtl},
+                                                               %% {bare, false},
                                                                {deps, ?DEPS},
                                                                {example, "rebar3 erlydtl compile"},
                                                                {short_desc, "Compile erlydtl templates."},
