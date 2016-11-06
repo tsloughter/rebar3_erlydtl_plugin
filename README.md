@@ -31,3 +31,5 @@ To have it invoked automatically when running `rebar3 compile` add it as a `prov
                  {pre, [{compile, {erlydtl, compile}}]}
                  ]}.
 ```
+
+Any templates in 'priv/templates' will then be compiled, by default, but this location is configurable.
